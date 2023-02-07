@@ -78,7 +78,7 @@ RSpec.describe 'Items API' do
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
   end
 
-  xit 'will return an error if missing an attribute' do 
+  it 'will return an error if missing an attribute' do 
     merchant_id = create(:merchant).id
     item_params = ({
                     name: 'Hair Bender',
@@ -89,12 +89,23 @@ RSpec.describe 'Items API' do
 
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
     
-
-
+    expect(response).to have_http_status(:not_found)
+    expect(response.body).to include("Missing or attribute not allowed")
   end
 
-  xit 'will ignore attributes not allowed' do 
+  it 'will ignore attributes not allowed' do 
+    item_params = ({
+                    name: 'Hair Bender',
+                    description: 'Dark Roast, whole beans',
+                    unit_price: "happy",
+                    merchant_id: 10
+                  })
+    headers = { "CONTENT_TYPE" => "application/json" }
 
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    
+    expect(response).to have_http_status(:not_found)
+    expect(response.body).to include("Missing or attribute not allowed")
   end
 
   it 'can update an existing item' do 
