@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Items API' do 
+RSpec.describe 'Merchant Items API' do 
   it 'sends a list of items associated with a merchant' do 
     merchant1_id = create(:merchant).id
     item_1 = create(:item, merchant_id: merchant1_id)
@@ -50,6 +50,6 @@ RSpec.describe 'Items API' do
 
     expect(response).to have_http_status(:not_found)
     expect(response).not_to be_successful
-    expect(response.body).to include("Description can't be blank")
+    expect(response.body).to include("Merchant must exist")
   end
 end
