@@ -11,10 +11,19 @@ RSpec.describe 'Merchants API' do
     merchants = JSON.parse(response.body, symbolize_names: true)
 
     expect(merchants[:data].count).to eq(5)
+
+    expect(merchants).to have_key(:data)
+    expect(merchants[:data]).to be_an(Array)
     
     merchants[:data].each do |merchant|
       expect(merchant).to have_key(:id)
       expect(merchant[:id]).to be_a(String)
+
+      expect(merchant).to have_key(:type)
+      expect(merchant[:type]).to eq("merchant")
+
+      expect(merchant).to have_key(:attributes)
+      expect(merchant[:attributes]).to be_a(Hash)
 
       expect(merchant[:attributes]).to have_key(:name)
       expect(merchant[:attributes][:name]).to be_a(String)
@@ -30,10 +39,19 @@ RSpec.describe 'Merchants API' do
 
     expect(response).to be_successful
 
+    expect(merchant).to have_key(:data)
+    expect(merchant[:data]).to be_a(Hash)
+
     expect(merchant[:data]).to have_key(:id)
     expect(merchant[:data][:id]).to be_a(String)
     string_comparison = id.to_s
     expect(merchant[:data][:id]).to eq(string_comparison)
+
+    expect(merchant[:data]).to have_key(:type)
+    expect(merchant[:data][:type]).to eq("merchant")
+
+    expect(merchant[:data]).to have_key(:attributes)
+    expect(merchant[:data][:attributes]).to be_a(Hash)
 
     expect(merchant[:data][:attributes]).to have_key(:name)
     expect(merchant[:data][:attributes][:name]).to be_a(String)
