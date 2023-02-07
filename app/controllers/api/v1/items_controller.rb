@@ -13,16 +13,22 @@ class Api::V1::ItemsController < ApplicationController
     if item.save
       render json: ItemSerializer.new(item), status: :created
     else  
-      render json: { erros: "Missing attribute or attribute not allowed" }, status: :not_found
+      render json: { errors: item.errors.full_messages.to_sentence }, status: :not_found
     end 
   end
 
   def update 
-    render json: ItemSerializer.new(Item.update(params[:id], item_params))
+    item = Item.find(params[:id])
+    item.update(item_params)
+    if item.save
+      render json: ItemSerializer.new(item), status: :created
+    else 
+      render json: { errors: item.errors.full_messages.to_sentence }, status: :not_found
+    end
   end
 
   def destroy 
-    render json: Item.destroy(params[:id])
+    render json: Item.destroy(params[:id]), status: :no_content
   end
 
   private 

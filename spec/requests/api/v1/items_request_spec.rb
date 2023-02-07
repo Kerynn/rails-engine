@@ -134,7 +134,8 @@ RSpec.describe 'Items API' do
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
     
     expect(response).to have_http_status(:not_found)
-    expect(response.body).to include("Missing attribute or attribute not allowed")
+    expect(response).not_to be_successful
+    expect(response.body).to include("Description can't be blank")
   end
 
   it 'will ignore attributes not allowed' do 
@@ -147,9 +148,10 @@ RSpec.describe 'Items API' do
     headers = { "CONTENT_TYPE" => "application/json" }
 
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
-    
+
     expect(response).to have_http_status(:not_found)
-    expect(response.body).to include("Missing attribute or attribute not allowed")
+    expect(response).not_to be_successful
+    expect(response.body).to include("Merchant must exist and Unit price is not a number") 
   end
 
   it 'can update an existing item' do 
@@ -163,8 +165,23 @@ RSpec.describe 'Items API' do
     item = Item.find_by(id: id)
 
     expect(response).to be_successful
+    expect(response).to have_http_status(:created)
     expect(item.name).to_not eq(previous_name)
     expect(item.name).to eq("Mountain Fresh")
+  end
+
+  it 'will return error if unable to update an item' do 
+    id = create(:item).id 
+    previous_name = Item.last.name 
+    
+    item_params = { merchant_id: 10 }
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+
+    expect(response).to have_http_status(:not_found)
+    expect(response).not_to be_successful
+    expect(response.body).to include("Merchant must exist") 
   end
 
   it 'can destroy an item' do 
@@ -175,6 +192,7 @@ RSpec.describe 'Items API' do
     delete "/api/v1/items/#{item.id}"
 
     expect(response).to be_success
+    expect(response).to have_http_status(:no_content)
     expect(Item.count).to eq(0)
     expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
   end
