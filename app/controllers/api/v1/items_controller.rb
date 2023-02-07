@@ -9,15 +9,26 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create 
-    render json: ItemSerializer.new(Item.create(item_params)), status: :created
+    item = Item.new(item_params)
+    if item.save
+      render json: ItemSerializer.new(item), status: :created
+    else  
+      render json: { errors: item.errors.full_messages.to_sentence }, status: :not_found
+    end 
   end
 
   def update 
-    render json: ItemSerializer.new(Item.update(params[:id], item_params))
+    item = Item.find(params[:id])
+    item.update(item_params)
+    if item.save
+      render json: ItemSerializer.new(item), status: :created
+    else 
+      render json: { errors: item.errors.full_messages.to_sentence }, status: :not_found
+    end
   end
 
   def destroy 
-    render json: Item.destroy(params[:id])
+    render json: Item.destroy(params[:id]), status: :no_content
   end
 
   private 
