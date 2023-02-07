@@ -11,9 +11,9 @@ class Api::V1::ItemsController < ApplicationController
   def create 
     item = Item.new(item_params)
     if item.save
-      render json: ItemSerializer.new(Item.create(item_params)), status: :created
+      render json: ItemSerializer.new(item), status: :created
     else  
-      render json: { erros: "Missing or attribute not allowed" }, status: :not_found
+      render json: { erros: "Missing attribute or attribute not allowed" }, status: :not_found
     end 
   end
 

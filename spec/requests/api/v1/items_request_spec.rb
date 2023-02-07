@@ -11,10 +11,19 @@ RSpec.describe 'Items API' do
     items = JSON.parse(response.body, symbolize_names: true)
 
     expect(items[:data].count).to eq(6)
+    
+    expect(items).to have_key(:data)
+    expect(items[:data]).to be_an(Array)
 
     items[:data].each do |item| 
       expect(item).to have_key(:id)
       expect(item[:id]).to be_a(String)
+
+      expect(item).to have_key(:type)
+      expect(item[:type]).to eq("item")
+
+      expect(item).to have_key(:attributes)
+      expect(item[:attributes]).to be_a(Hash)
 
       expect(item[:attributes]).to have_key(:merchant_id)
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
@@ -39,10 +48,19 @@ RSpec.describe 'Items API' do
 
     expect(response).to be_successful
 
+    expect(item).to have_key(:data)
+    expect(item[:data]).to be_a(Hash)
+
     expect(item[:data]).to have_key(:id)
     expect(item[:data][:id]).to be_a(String)
     string_comparison = id.to_s
     expect(item[:data][:id]).to eq(string_comparison)
+
+    expect(item[:data]).to have_key(:type)
+    expect(item[:data][:type]).to eq("item")
+
+    expect(item[:data]).to have_key(:attributes)
+    expect(item[:data][:attributes]).to be_a(Hash)
 
     expect(item[:data][:attributes]).to have_key(:merchant_id)
     expect(item[:data][:attributes][:merchant_id]).to be_an(Integer)
@@ -70,12 +88,38 @@ RSpec.describe 'Items API' do
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
     created_item = Item.last 
 
+    created_item_response = JSON.parse(response.body, symbolize_names: true)
+
     expect(response).to be_successful
     expect(response).to have_http_status(:created)
     expect(created_item.name).to eq(item_params[:name])
     expect(created_item.description).to eq(item_params[:description])
     expect(created_item.unit_price).to eq(item_params[:unit_price])
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+
+    expect(created_item_response).to have_key(:data)
+    expect(created_item_response[:data]).to be_a(Hash)
+
+    expect(created_item_response[:data]).to have_key(:id)
+    expect(created_item_response[:data][:id]).to be_a(String)
+
+    expect(created_item_response[:data]).to have_key(:type)
+    expect(created_item_response[:data][:type]).to eq("item")
+
+    expect(created_item_response[:data]).to have_key(:attributes)
+    expect(created_item_response[:data][:attributes]).to be_a(Hash)
+
+    expect(created_item_response[:data][:attributes]).to have_key(:name)
+    expect(created_item_response[:data][:attributes][:name]).to be_a(String)
+
+    expect(created_item_response[:data][:attributes]).to have_key(:description)
+    expect(created_item_response[:data][:attributes][:description]).to be_a(String)
+    
+    expect(created_item_response[:data][:attributes]).to have_key(:unit_price)
+    expect(created_item_response[:data][:attributes][:unit_price]).to be_a(Float)
+    
+    expect(created_item_response[:data][:attributes]).to have_key(:merchant_id)
+    expect(created_item_response[:data][:attributes][:merchant_id]).to be_an(Integer)
   end
 
   it 'will return an error if missing an attribute' do 
@@ -90,7 +134,7 @@ RSpec.describe 'Items API' do
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
     
     expect(response).to have_http_status(:not_found)
-    expect(response.body).to include("Missing or attribute not allowed")
+    expect(response.body).to include("Missing attribute or attribute not allowed")
   end
 
   it 'will ignore attributes not allowed' do 
@@ -105,7 +149,7 @@ RSpec.describe 'Items API' do
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
     
     expect(response).to have_http_status(:not_found)
-    expect(response.body).to include("Missing or attribute not allowed")
+    expect(response.body).to include("Missing attribute or attribute not allowed")
   end
 
   it 'can update an existing item' do 
