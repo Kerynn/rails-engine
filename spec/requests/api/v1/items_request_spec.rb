@@ -76,4 +76,38 @@ RSpec.describe 'Items API' do
     expect(created_item.unit_price).to eq(item_params[:unit_price])
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
   end
+
+  xit 'will return an error if missing an attribute' do 
+    merchant_id = create(:merchant).id
+    item_params = ({
+                    name: 'Hair Bender',
+                    unit_price: 8.99,
+                    merchant_id: merchant_id
+                  })
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    
+
+
+  end
+
+  xit 'will ignore attributes not allowed' do 
+
+  end
+
+  it 'can update an existing item' do 
+    id = create(:item).id 
+    previous_name = Item.last.name 
+    
+    item_params = { name: "Mountain Fresh" }
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+    item = Item.find_by(id: id)
+
+    expect(response).to be_successful
+    expect(item.name).to_not eq(previous_name)
+    expect(item.name).to eq("Mountain Fresh")
+  end
 end 
