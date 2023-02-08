@@ -65,7 +65,7 @@ RSpec.describe 'Merchant Search' do
     get '/api/v1/merchants/find?name=Goodbye'
 
     error_response = JSON.parse(response.body, symbolize_names: true)
-   
+
     expect(error_response).to have_key(:errors)
     expect(error_response[:errors]).to be_an(Array)
 
@@ -81,7 +81,7 @@ RSpec.describe 'Merchant Search' do
     get '/api/v1/merchants/find?name='
 
     error_response = JSON.parse(response.body, symbolize_names: true)
-    
+
     expect(error_response).to have_key(:errors)
     expect(error_response[:errors]).to be_an(Array)
 
