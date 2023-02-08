@@ -59,9 +59,23 @@ RSpec.describe 'Items Search' do
     expect(items[:data].count).to eq(3)
   end
 
-  xit 'price query... ' do 
+  xit 'min price query... ' do 
 
   end
+
+  xit 'max price query... ' do 
+
+  end
+
+  xit 'min AND max price query' do 
+
+  end
+
+  xit 'error if name and price query entered' do 
+
+  end
+
+  #### ADD QUERY FOR ONE OR 0 RESULTS FOR PRICE TO BELOW TEST ####
 
   it 'will return an array of objects with zero or one match found' do 
     get '/api/v1/items/find_all?name=Mountain'
