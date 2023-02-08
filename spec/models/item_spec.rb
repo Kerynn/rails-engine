@@ -51,12 +51,16 @@ RSpec.describe Item, type: :model do
       @item_6 = create(:item, description: "You are going to love these coffee seeds!")
     end
   
-    xit 'will return all items with a matching name or description' do 
+    it 'will return all items with a matching name or description' do 
       expect(Item.find_all_items_search("Bean")).to eq([@item_1, @item_2, @item_5])
     end
 
-    xit 'can return results with a case-insensative name search' do 
+    it 'can return results with a case-insensative name search' do 
+      expect(Item.find_all_items_search("beAN")).to eq([@item_1, @item_2, @item_5])
+    end
 
+    it 'will not return a search error object if nothing entered in the search' do 
+      expect(Item.find_all_items_search("")).to eq(nil)
     end
   end
 end
