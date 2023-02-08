@@ -21,7 +21,7 @@ RSpec.describe Merchant, type: :model do
       expect(Merchant.find_merchant("worLD")).to eq(@merchant_2)
     end
 
-    it 'will not return a merchant if nothing entered in the search' do 
+    it 'will not return a search error object if nothing entered in the search' do 
       expect(Merchant.find_merchant("")).to eq(nil)
     end
   end 
