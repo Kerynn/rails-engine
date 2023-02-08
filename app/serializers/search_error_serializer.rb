@@ -14,16 +14,4 @@ class SearchErrorSerializer
       ]
     }
   end
-  # def self.serialized_error
-  #     {
-  #       "errors":
-  #       [
-  #         { 
-  #           "status" => "NOT FOUND",
-  #           "error_message" => "No merchant matches search",
-  #           "code" => 404
-  #         }
-  #       ]  
-  #     }
-  # end
 end
