@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Items API' do 
+RSpec.describe 'Items API' do
   it 'sends a list of items' do 
     create_list(:item, 6)
 
