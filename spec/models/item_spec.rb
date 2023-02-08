@@ -43,12 +43,12 @@ RSpec.describe Item, type: :model do
 
   describe 'find_all_items_search' do 
     before :each do 
-      @item_1 = create(:item, name: "Beans Aplenty")
-      @item_2 = create(:item, name: "It's a Bean World")
-      @item_3 = create(:item, name: "Holler Mountain")
-      @item_4 = create(:item, name: "Happy Place")
-      @item_5 = create(:item, description: "This darkest roast is beantastic!")
-      @item_6 = create(:item, description: "You are going to love these coffee seeds!")
+      @item_1 = create(:item, name: "Beans Aplenty", description: "It's great")
+      @item_2 = create(:item, name: "It's a Bean World", description: "not so bad")
+      @item_3 = create(:item, name: "Holler Mountain", description: "yummy")
+      @item_4 = create(:item, name: "Happy Place", description: "just okay")
+      @item_5 = create(:item, name: "Coffee", description: "This darkest roast is beantastic!")
+      @item_6 = create(:item, name: "Cool Coffee", description: "You are going to love these coffee seeds!")
     end
   
     it 'will return all items with a matching name or description' do 
