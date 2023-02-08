@@ -20,5 +20,9 @@ RSpec.describe Merchant, type: :model do
     it 'can do a case-insensative search' do 
       expect(Merchant.find_merchant("worLD")).to eq(@merchant_2)
     end
+
+    it 'will not return a merchant if nothing entered in the search' do 
+      expect(Merchant.find_merchant("")).to eq(nil)
+    end
   end 
 end
