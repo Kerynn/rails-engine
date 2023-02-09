@@ -85,7 +85,7 @@ RSpec.describe 'Items Search' do
     expect(items[:data].count).to eq(5)
   end
 
-  it 'min AND max price query' do 
+  it 'can query the min AND max price' do 
     get '/api/v1/items/find_all?min_price=10.99&max_price=28.00'
 
     items = JSON.parse(response.body, symbolize_names: true)
@@ -108,6 +108,7 @@ RSpec.describe 'Items Search' do
 
     expect(error_response[:errors][0]).to have_key(:status)
     expect(error_response[:errors][0][:status]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Cannot query name and price")
 
     expect(error_response[:errors][0]).to have_key(:message)
     expect(error_response[:errors][0][:message]).to be_a(String)
@@ -175,6 +176,7 @@ RSpec.describe 'Items Search' do
 
     expect(error_response[:errors][0]).to have_key(:message)
     expect(error_response[:errors][0][:message]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Query must be entered")
     
     expect(error_response[:errors][0]).to have_key(:code)
     expect(error_response[:errors][0][:code]).to be_an(Integer)
@@ -193,7 +195,44 @@ RSpec.describe 'Items Search' do
 
     expect(error_response[:errors][0]).to have_key(:message)
     expect(error_response[:errors][0][:message]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Query must be entered")
+
+    expect(error_response[:errors][0]).to have_key(:code)
+    expect(error_response[:errors][0][:code]).to be_an(Integer)
+  end
+
+  it 'will return an error if a negative number passed in query' do 
+    get '/api/v1/items/find_all?min_price=-5.00'
+
+    error_response = JSON.parse(response.body, symbolize_names: true)
     
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors]).to be_an(Array)
+
+    expect(error_response[:errors][0]).to have_key(:status)
+    expect(error_response[:errors][0][:status]).to be_a(String)
+
+    expect(error_response[:errors][0]).to have_key(:message)
+    expect(error_response[:errors][0][:message]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Price query cannot be a negative number")
+
+    expect(error_response[:errors][0]).to have_key(:code)
+    expect(error_response[:errors][0][:code]).to be_an(Integer)
+
+    get '/api/v1/items/find_all?max_price=-25.00'
+
+    error_response = JSON.parse(response.body, symbolize_names: true)
+    
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors]).to be_an(Array)
+
+    expect(error_response[:errors][0]).to have_key(:status)
+    expect(error_response[:errors][0][:status]).to be_a(String)
+
+    expect(error_response[:errors][0]).to have_key(:message)
+    expect(error_response[:errors][0][:message]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Price query cannot be a negative number")
+
     expect(error_response[:errors][0]).to have_key(:code)
     expect(error_response[:errors][0][:code]).to be_an(Integer)
   end

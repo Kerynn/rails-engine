@@ -12,9 +12,17 @@ class Api::V1::Items::SearchController < ApplicationController
     elsif params[:min_price] && params[:max_price]
         render json: ItemSerializer.new(all_items) 
     elsif params[:min_price]
-        render json: ItemSerializer.new(min_items) 
+      if params[:min_price].to_f >= 0
+        render json: ItemSerializer.new(min_items)
+      else 
+        render json: { errors: SearchErrorSerializer.new(negative_query).serialized_error }, status: :bad_request   
+      end
     elsif params[:max_price] 
+      if params[:max_price].to_f >= 0
         render json: ItemSerializer.new(max_items) 
+      else 
+        render json: { errors: SearchErrorSerializer.new(negative_query).serialized_error }, status: :bad_request   
+      end
     else 
       render json: { errors: SearchErrorSerializer.new(no_query).serialized_error }, status: :bad_request   
     end
@@ -44,5 +52,9 @@ class Api::V1::Items::SearchController < ApplicationController
 
   def name_and_price_query 
     SearchError.new("NOT FOUND", "Cannot query name and price", 400)
+  end
+
+  def negative_query 
+    SearchError.new("NOT FOUND", "Price query cannot be a negative number", 400)
   end
 end
