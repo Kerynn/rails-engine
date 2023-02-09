@@ -196,21 +196,5 @@ RSpec.describe 'Items Search' do
     
     expect(error_response[:errors][0]).to have_key(:code)
     expect(error_response[:errors][0][:code]).to be_an(Integer)
-
-    # get '/api/v1/items/find_all?min_price='
-
-    # error_response = JSON.parse(response.body, symbolize_names: true)
-
-    # expect(error_response).to have_key(:errors)
-    # expect(error_response[:errors]).to be_an(Array)
-
-    # expect(error_response[:errors][0]).to have_key(:status)
-    # expect(error_response[:errors][0][:status]).to be_a(String)
-
-    # expect(error_response[:errors][0]).to have_key(:message)
-    # expect(error_response[:errors][0][:message]).to be_a(String)
-    
-    # expect(error_response[:errors][0]).to have_key(:code)
-    # expect(error_response[:errors][0][:code]).to be_an(Integer)
   end
 end
