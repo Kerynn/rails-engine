@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe 'Items Search' do 
   before :each do 
-    @item_1 = create(:item, name: "Beans Aplenty", description: "It's great")
-    @item_2 = create(:item, name: "It's a Bean World", description: "not so bad")
-    @item_3 = create(:item, name: "Holler Mountain", description: "yummy")
-    @item_4 = create(:item, name: "Happy Place", description: "just okay")
-    @item_5 = create(:item, name: "Coffee", description: "This darkest roast is beantastic!")
-    @item_6 = create(:item, name: "Cool Coffee", description: "You are going to love these coffee seeds!")
+    @item_1 = create(:item, name: "Beans Aplenty", description: "It's great", unit_price: 8.99)
+    @item_2 = create(:item, name: "It's a Bean World", description: "not so bad", unit_price: 25.48)
+    @item_3 = create(:item, name: "Holler Mountain", description: "yummy", unit_price: 4.44)
+    @item_4 = create(:item, name: "Happy Place", description: "just okay", unit_price: 10.99)
+    @item_5 = create(:item, name: "Coffee", description: "This darkest roast is beantastic!", unit_price: 30.99)
+    @item_6 = create(:item, name: "Cool Coffee", description: "You are going to love these coffee seeds!", unit_price: 12.12)
   end
 
   it 'will return all items with a matching name or description' do 
@@ -59,23 +59,62 @@ RSpec.describe 'Items Search' do
     expect(items[:data].count).to eq(3)
   end
 
-  xit 'min price query... ' do 
+  it 'will return all items that are less than or equal to min price search query' do 
+    get '/api/v1/items/find_all?min_price=10.99'
 
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+
+    expect(items).to have_key(:data)
+    expect(items[:data]).to be_an(Array)
+
+    expect(items[:data].count).to eq(3)
   end
 
-  xit 'max price query... ' do 
+  it 'will return all items that are more than or equal to max price search query' do 
+    get '/api/v1/items/find_all?max_price=8.00'
 
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+
+    expect(items).to have_key(:data)
+    expect(items[:data]).to be_an(Array)
+
+    expect(items[:data].count).to eq(5)
   end
 
-  xit 'min AND max price query' do 
+  it 'min AND max price query' do 
+    get '/api/v1/items/find_all?min_price=10.99&max_price=28.00'
 
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+
+    expect(items).to have_key(:data)
+    expect(items[:data]).to be_an(Array)
+
+    expect(items[:data].count).to eq(4)
   end
 
-  xit 'error if name and price query entered' do 
+  it 'error if name and price query entered' do 
+    get '/api/v1/items/find_all?name=bean&max_price=28.00'
+    
+    error_response = JSON.parse(response.body, symbolize_names: true)
 
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors]).to be_an(Array)
+
+    expect(error_response[:errors][0]).to have_key(:status)
+    expect(error_response[:errors][0][:status]).to be_a(String)
+
+    expect(error_response[:errors][0]).to have_key(:message)
+    expect(error_response[:errors][0][:message]).to be_a(String)
+    
+    expect(error_response[:errors][0]).to have_key(:code)
+    expect(error_response[:errors][0][:code]).to be_an(Integer)
   end
-
-  #### ADD QUERY FOR ONE OR 0 RESULTS FOR PRICE TO BELOW TEST ####
 
   it 'will return an array of objects with zero or one match found' do 
     get '/api/v1/items/find_all?name=Mountain'
@@ -99,6 +138,28 @@ RSpec.describe 'Items Search' do
     expect(items[:data]).to be_an(Array)
 
     expect(items[:data].count).to eq(0)
+
+    get '/api/v1/items/find_all?min_price=5.00' 
+    
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+
+    expect(items).to have_key(:data)
+    expect(items[:data]).to be_an(Array)
+
+    expect(items[:data].count).to eq(1)
+  
+    get '/api/v1/items/find_all?max_price=45.25' 
+    
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+
+    expect(items).to have_key(:data)
+    expect(items[:data]).to be_an(Array)
+
+    expect(items[:data].count).to eq(0)  
   end
 
   it 'will return an error message if no query params entered' do 
@@ -135,5 +196,21 @@ RSpec.describe 'Items Search' do
     
     expect(error_response[:errors][0]).to have_key(:code)
     expect(error_response[:errors][0][:code]).to be_an(Integer)
+
+    # get '/api/v1/items/find_all?min_price='
+
+    # error_response = JSON.parse(response.body, symbolize_names: true)
+
+    # expect(error_response).to have_key(:errors)
+    # expect(error_response[:errors]).to be_an(Array)
+
+    # expect(error_response[:errors][0]).to have_key(:status)
+    # expect(error_response[:errors][0][:status]).to be_a(String)
+
+    # expect(error_response[:errors][0]).to have_key(:message)
+    # expect(error_response[:errors][0][:message]).to be_a(String)
+    
+    # expect(error_response[:errors][0]).to have_key(:code)
+    # expect(error_response[:errors][0][:code]).to be_an(Integer)
   end
 end

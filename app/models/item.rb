@@ -21,11 +21,19 @@ class Item < ApplicationRecord
   end
 
   def self.find_all_items_min_price(price)
-    where("unit_price <= ?", price)
+    if name != ""
+      where("unit_price <= ?", price)
+    else 
+      nil 
+    end 
   end
 
   def self.find_all_items_max_price(price)
-    where("unit_price >= ?", price)
+    if name != ""
+      where("unit_price >= ?", price)
+    else 
+      nil 
+    end 
   end
 
   private 
