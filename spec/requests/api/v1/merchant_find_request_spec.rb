@@ -56,7 +56,8 @@ RSpec.describe 'Merchant Search' do
 
     expect(error_response[:errors][0]).to have_key(:message)
     expect(error_response[:errors][0][:message]).to be_a(String)
-    
+    expect(error_response[:errors][0][:message]).to eq("Name query must be entered")
+
     expect(error_response[:errors][0]).to have_key(:code)
     expect(error_response[:errors][0][:code]).to be_an(Integer)
   end
@@ -65,7 +66,7 @@ RSpec.describe 'Merchant Search' do
     get '/api/v1/merchants/find?name=Goodbye'
 
     error_response = JSON.parse(response.body, symbolize_names: true)
-
+    
     expect(error_response).to have_key(:errors)
     expect(error_response[:errors]).to be_an(Array)
 
@@ -74,7 +75,8 @@ RSpec.describe 'Merchant Search' do
 
     expect(error_response[:errors][0]).to have_key(:message)
     expect(error_response[:errors][0][:message]).to be_a(String)
-    
+    expect(error_response[:errors][0][:message]).to eq("No merchant matches search")
+
     expect(error_response[:errors][0]).to have_key(:code)
     expect(error_response[:errors][0][:code]).to be_an(Integer)
 
