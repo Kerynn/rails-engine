@@ -48,8 +48,23 @@ RSpec.describe 'Merchant Items API' do
   it 'returns an error if merchant not found' do 
     get "/api/v1/merchants/8/items"
 
+    error_response = JSON.parse(response.body, symbolize_names: true)
+
     expect(response).to have_http_status(:not_found)
     expect(response).not_to be_successful
     expect(response.body).to include("Merchant must exist")
+
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors]).to be_an(Array)
+
+    expect(error_response[:errors][0]).to have_key(:status)
+    expect(error_response[:errors][0][:status]).to be_a(String)
+
+    expect(error_response[:errors][0]).to have_key(:message)
+    expect(error_response[:errors][0][:message]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Merchant must exist")
+    
+    expect(error_response[:errors][0]).to have_key(:code)
+    expect(error_response[:errors][0][:code]).to be_an(Integer)
   end
 end
