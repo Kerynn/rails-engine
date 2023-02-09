@@ -10,11 +10,11 @@ class Api::V1::Items::SearchController < ApplicationController
         render json: { errors: SearchErrorSerializer.new(no_query).serialized_error }, status: :bad_request
       end 
     elsif params[:min_price] && params[:max_price]
-      render json: ItemSerializer.new(all_items)
+        render json: ItemSerializer.new(all_items) 
     elsif params[:min_price]
-       render json: ItemSerializer.new(min_items)
+        render json: ItemSerializer.new(min_items) 
     elsif params[:max_price] 
-      render json: ItemSerializer.new(max_items)
+        render json: ItemSerializer.new(max_items) 
     else 
       render json: { errors: SearchErrorSerializer.new(no_query).serialized_error }, status: :bad_request   
     end
