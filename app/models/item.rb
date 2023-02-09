@@ -13,7 +13,7 @@ class Item < ApplicationRecord
     if name != ""
       where("lower(description) LIKE ?", 
         sanitize_sql_for_conditions("%" + name.downcase + "%"))
-        .or(self.where("lower(name) LIKE ?", 
+        .or(where("lower(name) LIKE ?", 
         sanitize_sql_for_conditions("%" + name.downcase + "%")))
     else 
       nil 
@@ -21,7 +21,7 @@ class Item < ApplicationRecord
   end
 
   def self.find_all_items_min_price(price)
-    if name != ""
+    if price != ""
       where("unit_price <= ?", price)
     else 
       nil 
@@ -29,7 +29,7 @@ class Item < ApplicationRecord
   end
 
   def self.find_all_items_max_price(price)
-    if name != ""
+    if price != ""
       where("unit_price >= ?", price)
     else 
       nil 

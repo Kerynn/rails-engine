@@ -59,16 +59,18 @@ RSpec.describe Item, type: :model do
       expect(Item.find_all_items_name("beAN")).to eq([@item_1, @item_2, @item_5])
     end
 
-    it 'will not return a search error object if nothing entered in the search' do 
-      expect(Item.find_all_items_name("")).to eq(nil)
-    end
-
     it 'will return all items with a price less than or equal to search query' do 
       expect(Item.find_all_items_min_price(10.99)).to eq([@item_1, @item_3, @item_4])
     end
 
     it 'will return all items with a price greater than or equal to search query' do 
       expect(Item.find_all_items_max_price(25.48)).to eq([@item_2, @item_5])
+    end
+
+    it 'will return nil if nothing entered in the search' do 
+      expect(Item.find_all_items_name("")).to eq(nil)
+      expect(Item.find_all_items_min_price("")).to eq(nil)
+      expect(Item.find_all_items_max_price("")).to eq(nil)
     end
   end
 end
