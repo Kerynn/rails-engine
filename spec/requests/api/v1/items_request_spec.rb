@@ -225,7 +225,7 @@ RSpec.describe 'Items API' do
 
       delete "/api/v1/items/#{item.id}"
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to have_http_status(:no_content)
       expect(Item.count).to eq(0)
       expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
@@ -252,7 +252,7 @@ RSpec.describe 'Items API' do
       expect(Invoice.count).to eq(1)
       expect(InvoiceItem.count).to eq(1)
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to have_http_status(:no_content)
       expect{Item.find(item1.id)}.to raise_error(ActiveRecord::RecordNotFound)
       expect{Invoice.find(invoice1.id)}.to raise_error(ActiveRecord::RecordNotFound)
