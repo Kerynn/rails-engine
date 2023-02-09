@@ -23,7 +23,7 @@ class Api::V1::Items::SearchController < ApplicationController
       else 
         render json: { errors: SearchErrorSerializer.new(negative_query).serialized_error }, status: :bad_request   
       end
-    else 
+    else
       render json: { errors: SearchErrorSerializer.new(no_query).serialized_error }, status: :bad_request   
     end
   end
