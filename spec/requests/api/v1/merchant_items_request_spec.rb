@@ -45,7 +45,7 @@ RSpec.describe 'Merchant Items API' do
     end
   end 
 
-  xit 'returns an error if merchant not found' do 
+  it 'returns an error if merchant not found' do 
     get "/api/v1/merchants/8/items"
 
     expect(response).to have_http_status(:not_found)
