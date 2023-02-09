@@ -9,12 +9,12 @@ class Item < ApplicationRecord
 
   before_destroy :destroy_invoice_with_single_item, prepend: true
   
-  def self.find_all_items_search(search)
-    if search != ""
+  def self.find_all_items_name(name)
+    if name != ""
       where("lower(description) LIKE ?", 
-        sanitize_sql_for_conditions("%" + search.downcase + "%"))
+        sanitize_sql_for_conditions("%" + name.downcase + "%"))
         .or(self.where("lower(name) LIKE ?", 
-        sanitize_sql_for_conditions("%" + search.downcase + "%")))
+        sanitize_sql_for_conditions("%" + name.downcase + "%")))
     else 
       nil 
     end 

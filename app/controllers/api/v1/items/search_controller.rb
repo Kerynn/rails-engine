@@ -2,7 +2,7 @@ class Api::V1::Items::SearchController < ApplicationController
 
   def index 
     if params[:name]
-      items = Item.find_all_items_search(params[:name])
+      items = Item.find_all_items_name(params[:name])
       if items != nil
         render json: ItemSerializer.new(items) 
       else 

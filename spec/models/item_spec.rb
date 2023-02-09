@@ -41,26 +41,26 @@ RSpec.describe Item, type: :model do
     end
   end 
 
-  describe 'find_all_items_search' do 
+  describe 'find all items search' do 
     before :each do 
-      @item_1 = create(:item, name: "Beans Aplenty", description: "It's great")
-      @item_2 = create(:item, name: "It's a Bean World", description: "not so bad")
-      @item_3 = create(:item, name: "Holler Mountain", description: "yummy")
-      @item_4 = create(:item, name: "Happy Place", description: "just okay")
-      @item_5 = create(:item, name: "Coffee", description: "This darkest roast is beantastic!")
-      @item_6 = create(:item, name: "Cool Coffee", description: "You are going to love these coffee seeds!")
-    end
+      @item_1 = create(:item, name: "Beans Aplenty", description: "It's great", unit_price: 8.99)
+      @item_2 = create(:item, name: "It's a Bean World", description: "not so bad", unit_price: 25.48)
+      @item_3 = create(:item, name: "Holler Mountain", description: "yummy", unit_price: 4.44)
+      @item_4 = create(:item, name: "Happy Place", description: "just okay", unit_price: 10.99)
+      @item_5 = create(:item, name: "Coffee", description: "This darkest roast is beantastic!", unit_price: 30.99)
+      @item_6 = create(:item, name: "Cool Coffee", description: "You are going to love these coffee seeds!", unit_price: 12.12)
+      end
   
     it 'will return all items with a matching name or description' do 
-      expect(Item.find_all_items_search("Bean")).to eq([@item_1, @item_2, @item_5])
+      expect(Item.find_all_items_name("Bean")).to eq([@item_1, @item_2, @item_5])
     end
 
     it 'can return results with a case-insensative name search' do 
-      expect(Item.find_all_items_search("beAN")).to eq([@item_1, @item_2, @item_5])
+      expect(Item.find_all_items_name("beAN")).to eq([@item_1, @item_2, @item_5])
     end
 
     it 'will not return a search error object if nothing entered in the search' do 
-      expect(Item.find_all_items_search("")).to eq(nil)
+      expect(Item.find_all_items_name("")).to eq(nil)
     end
   end
 end
