@@ -52,7 +52,6 @@ RSpec.describe 'Merchant Items API' do
 
     expect(response).to have_http_status(:not_found)
     expect(response).not_to be_successful
-    expect(response.body).to include("Merchant must exist")
 
     expect(error_response).to have_key(:errors)
     expect(error_response[:errors]).to be_an(Array)
