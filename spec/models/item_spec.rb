@@ -67,7 +67,7 @@ RSpec.describe Item, type: :model do
       expect(Item.find_all_items_min_price(10.99)).to eq([@item_1, @item_3, @item_4])
     end
 
-    it 'will return all items with a price greater tahn or equal to search query' do 
+    it 'will return all items with a price greater than or equal to search query' do 
       expect(Item.find_all_items_max_price(25.48)).to eq([@item_2, @item_5])
     end
   end
