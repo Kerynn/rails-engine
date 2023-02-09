@@ -49,7 +49,7 @@ RSpec.describe Item, type: :model do
       @item_4 = create(:item, name: "Happy Place", description: "just okay", unit_price: 10.99)
       @item_5 = create(:item, name: "Coffee", description: "This darkest roast is beantastic!", unit_price: 30.99)
       @item_6 = create(:item, name: "Cool Coffee", description: "You are going to love these coffee seeds!", unit_price: 12.12)
-      end
+    end
   
     it 'will return all items with a matching name or description' do 
       expect(Item.find_all_items_name("Bean")).to eq([@item_1, @item_2, @item_5])
@@ -61,6 +61,14 @@ RSpec.describe Item, type: :model do
 
     it 'will not return a search error object if nothing entered in the search' do 
       expect(Item.find_all_items_name("")).to eq(nil)
+    end
+
+    it 'will return all items with a price less than or equal to search query' do 
+      expect(Item.find_all_items_min_price(10.99)).to eq([@item_1, @item_3, @item_4])
+    end
+
+    it 'will return all items with a price greater tahn or equal to search query' do 
+      expect(Item.find_all_items_max_price(25.48)).to eq([@item_2, @item_5])
     end
   end
 end

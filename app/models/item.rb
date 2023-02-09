@@ -20,6 +20,14 @@ class Item < ApplicationRecord
     end 
   end
 
+  def self.find_all_items_min_price(price)
+    where("unit_price <= ?", price)
+  end
+
+  def self.find_all_items_max_price(price)
+    where("unit_price >= ?", price)
+  end
+
   private 
 
   def destroy_invoice_with_single_item
