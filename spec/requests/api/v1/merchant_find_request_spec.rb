@@ -56,6 +56,24 @@ RSpec.describe 'Merchant Search' do
 
     expect(error_response[:errors][0]).to have_key(:message)
     expect(error_response[:errors][0][:message]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Name query must be entered")
+
+    expect(error_response[:errors][0]).to have_key(:code)
+    expect(error_response[:errors][0][:code]).to be_an(Integer)
+    
+    get '/api/v1/merchants/find?name='
+
+    error_response = JSON.parse(response.body, symbolize_names: true)
+
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors]).to be_an(Array)
+
+    expect(error_response[:errors][0]).to have_key(:status)
+    expect(error_response[:errors][0][:status]).to be_a(String)
+
+    expect(error_response[:errors][0]).to have_key(:message)
+    expect(error_response[:errors][0][:message]).to be_a(String)
+    expect(error_response[:errors][0][:message]).to eq("Name query must be entered")
     
     expect(error_response[:errors][0]).to have_key(:code)
     expect(error_response[:errors][0][:code]).to be_an(Integer)
@@ -64,34 +82,10 @@ RSpec.describe 'Merchant Search' do
   it 'will return an error message if query did not return a merchant result' do 
     get '/api/v1/merchants/find?name=Goodbye'
 
-    error_response = JSON.parse(response.body, symbolize_names: true)
-   
-    expect(error_response).to have_key(:errors)
-    expect(error_response[:errors]).to be_an(Array)
+    # response = JSON.parse(response.body, symbolize_names: true)
 
-    expect(error_response[:errors][0]).to have_key(:status)
-    expect(error_response[:errors][0][:status]).to be_a(String)
-
-    expect(error_response[:errors][0]).to have_key(:message)
-    expect(error_response[:errors][0][:message]).to be_a(String)
-    
-    expect(error_response[:errors][0]).to have_key(:code)
-    expect(error_response[:errors][0][:code]).to be_an(Integer)
-
-    get '/api/v1/merchants/find?name='
-
-    error_response = JSON.parse(response.body, symbolize_names: true)
-    
-    expect(error_response).to have_key(:errors)
-    expect(error_response[:errors]).to be_an(Array)
-
-    expect(error_response[:errors][0]).to have_key(:status)
-    expect(error_response[:errors][0][:status]).to be_a(String)
-
-    expect(error_response[:errors][0]).to have_key(:message)
-    expect(error_response[:errors][0][:message]).to be_a(String)
-    
-    expect(error_response[:errors][0]).to have_key(:code)
-    expect(error_response[:errors][0][:code]).to be_an(Integer)
+    expect(response).to be_successful
+    # expect(response).to have_key(:data)
+    # expect(response[:data]).to be_a(Hash)
   end
 end

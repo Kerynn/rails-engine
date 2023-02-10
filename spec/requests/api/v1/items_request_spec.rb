@@ -225,10 +225,39 @@ RSpec.describe 'Items API' do
 
       delete "/api/v1/items/#{item.id}"
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to have_http_status(:no_content)
       expect(Item.count).to eq(0)
       expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'will destroy the invoice if the deleted item is only item on the invoice' do 
+      customer = Customer.create!(first_name: "Charlie", last_name: "Jones")
+      invoice1 = Invoice.create!(customer_id: customer.id, status: 2) # one item
+      invoice2 = Invoice.create!(customer_id: customer.id, status: 2) # two items
+      merchant = create(:merchant)
+      item1 = create(:item, merchant_id: merchant.id)
+      item2 = create(:item, merchant_id: merchant.id)
+      ii_1 = InvoiceItem.create!(item_id: item1.id, invoice_id: invoice1.id)
+      ii_2 = InvoiceItem.create!(item_id: item1.id, invoice_id: invoice2.id)
+      ii_3 = InvoiceItem.create!(item_id: item2.id, invoice_id: invoice2.id)
+
+      expect(Item.count).to eq(2)
+      expect(Invoice.count).to eq(2)
+      expect(InvoiceItem.count).to eq(3)
+
+      delete "/api/v1/items/#{item1.id}"
+
+      expect(Item.count).to eq(1)
+      expect(Invoice.count).to eq(1)
+      expect(InvoiceItem.count).to eq(1)
+
+      expect(response).to be_successful
+      expect(response).to have_http_status(:no_content)
+      expect{Item.find(item1.id)}.to raise_error(ActiveRecord::RecordNotFound)
+      expect{Invoice.find(invoice1.id)}.to raise_error(ActiveRecord::RecordNotFound)
+      expect{InvoiceItem.find(ii_1.id)}.to raise_error(ActiveRecord::RecordNotFound)
+      expect{InvoiceItem.find(ii_2.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end 

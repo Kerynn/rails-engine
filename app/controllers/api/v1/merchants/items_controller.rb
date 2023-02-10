@@ -1,11 +1,12 @@
 class Api::V1::Merchants::ItemsController < ApplicationController
-  
+
   def index
-    merchant = Merchant.find(params[:id])
-    if merchant.id
-      render json: ItemSerializer.new(merchant.items)
-    else
-      render json: { errors: merchant.errors.full_messages.to_sentence }, status: :not_found
+    begin 
+      merchant = Merchant.find(params[:id])
+      render json: ItemSerializer.new(merchant.items)  
+    rescue ActiveRecord::RecordNotFound
+      err = SearchError.new("NOT FOUND", "Merchant must exist", 404)
+      render json: { errors: SearchErrorSerializer.new(err).serialized_error }, status: :not_found
     end 
   end
 end

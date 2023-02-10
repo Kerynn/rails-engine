@@ -5,13 +5,19 @@ class Api::V1::Merchants::SearchController < ApplicationController
       merchant = Merchant.find_merchant(params[:name])
       if merchant.class == Merchant 
         render json: MerchantSerializer.new(merchant)
-      else
-        err = SearchError.new("NOT FOUND", "No merchant matches search", 404)
-        render json: SearchErrorSerializer.new(err).serialized_error
+      elsif params[:name] == ""
+        render json: { errors: SearchErrorSerializer.new(no_query).serialized_error }, status: :bad_request
+      else   
+        render json: NoDataSerializer.no_data
       end
     else
-      err = SearchError.new("NOT FOUND", "Name query must be entered", 404)
-      render json: SearchErrorSerializer.new(err).serialized_error
+      render json: { errors: SearchErrorSerializer.new(no_query).serialized_error }, status: :bad_request
     end 
   end
+end
+
+private 
+
+def no_query 
+  err = SearchError.new("NOT FOUND", "Name query must be entered", 400)
 end
